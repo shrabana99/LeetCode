@@ -1,0 +1,39 @@
+class Solution {
+public:
+    // to check if a position is inside the board or not
+    bool isinside(int posx, int posy){
+        if(posx >= 0 && posx < 8 && posy>= 0 && posy <8)
+            return true;
+        else return false;
+    }
+    vector<vector<int>> queensAttacktheKing(vector<vector<int>>& queens, 
+                                            vector<int>& king) {
+        // 8 possible direction                               
+        int x[] = {1, 1, -1, -1, 1, -1, 0, 0};
+        int y[] = {-1, 1, 1, -1, 0, 0, 1, -1};
+        vector<vector<int>> ans;
+        vector<vector<int>> board(8, vector<int> (8, 0));
+        // each queen's position in the board is marked
+        for(int i = 0; i < queens.size(); i++){
+            board[queens[i][0]][queens[i][1]] = 1;
+        }
+        for(int i = 0; i < 8; i++){
+            int posx = king[0] + x[i];
+            int posy = king[1] + y[i];
+            while(isinside(posx, posy)){
+               if(!board[posx][posy]){
+                posx += x[i];
+                posy += y[i];
+               }
+                else{
+                    vector<int> temp(2, 0);
+                    temp[0] = posx;
+                    temp[1] = posy;
+                    ans.push_back(temp);
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
