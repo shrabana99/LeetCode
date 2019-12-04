@@ -1,0 +1,55 @@
+class Solution {
+public:
+    vector<pair <int, int>> queens;
+    vector<vector<string>> vec;
+    vector<vector<string>> solveNQueens(int n) {
+        vector<string> board;
+        for(int i = 0; i < n; i++){ // creating the board 
+            string a; 
+            for(int j = 0; j < n; j++){
+                a += '.';
+            }
+            board.push_back(a);
+        }
+        /*for(int i = 0; i < n; i++){ // creating the board 
+            cout << board[i] << endl;
+        }*/
+        solve(0, n, board);
+        return vec;
+    }
+    
+    void solve(int x, int n, vector<string>& board){
+        
+        if(x == n){
+        /*for(int i = 0; i < n; i++){ // creating the board 
+            cout << board[i] << endl;
+        }*/
+            vec.push_back(board); // pushing the board
+        }
+        for(int i = 0; i < n; i++){
+            if(!check(x, i, n, board)){
+                board[x][i] = 'Q';
+                queens.push_back({x, i});
+                solve(x+1, n, board);
+                board[x][i] = '.'; // removing the queen
+                queens.pop_back(); 
+            }
+                
+        }
+
+    }
+    
+    bool check(int x, int y, int n, vector<string>& board){
+        bool flag = false;
+        if(queens.empty())
+            return flag;
+        for(int i = 0; i < queens.size() && !flag; i++){ 
+            int x1 = queens[i].first;
+            int y1 = queens[i].second;
+            if(x == x1 || y == y1 || abs(x-x1) == abs(y-y1))
+                flag = true;
+        }
+        return flag;
+    }
+    
+};
