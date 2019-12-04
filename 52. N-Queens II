@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int cnt = 0;
+    vector<pair<int, int>> queen;
+    int totalNQueens(int n) {
+        vector<vector<int>> board(n, vector<int> (n));
+        solve(0, n, board);
+        return cnt;
+    }
+    void solve(int x, int n, vector<vector<int>>& board){
+        if(x == n)
+            cnt++;
+        for(int i = 0; i < n; i++){
+            if(possible(x, i, n, board)){
+                board[x][i] = 1;
+                queen.push_back({x, i});
+                
+                solve(x+1, n, board);
+                
+                board[x][i] = 0;
+                queen.pop_back();
+                
+            }
+        }
+    }
+    bool possible(int x, int y, int n, vector<vector<int>>& board){
+        for(int i = 0; i < queen.size(); i++){
+            int x1 = queen[i].first;
+            int y1 = queen[i].second;
+            if(x == x1 || y == y1 || abs(x-x1) == abs(y-y1)){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+};
