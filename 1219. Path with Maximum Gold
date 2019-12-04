@@ -1,0 +1,41 @@
+        int X[] = {0,0,1,-1};
+        int Y[] = {1,-1,0,0};
+class Solution {
+public:
+    int n, m;
+    int vis[16][16];
+    int dp[16][16];
+    int ans = 0;
+    int tmp = 0;
+    int getMaximumGold(vector<vector<int>>& grid) {
+        n = grid.size();
+        m = grid[0].size();
+        memset(vis, 0, sizeof(vis));
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!vis[i][j] && grid[i][j]){
+                    dfs(i, j, grid, grid[i][j]);
+                }
+            }    
+        }
+        return ans;
+    }
+    
+    void dfs(int x, int y, vector<vector<int>>& grid, int sum){
+        ans = max(ans, sum);
+        if(ans < dp[x][y])
+            return ;
+        dp[x][y] = ans;
+        vis[x][y] = 1; 
+        for(int i = 0; i < 4; i++){
+            x += X[i];
+            y += Y[i];
+            if(x >=0 && x < n && y >= 0 && y < m &&!vis[x][y] && grid[x][y]){
+                dfs(x, y, grid, sum + grid[x][y]);
+            }
+            x -= X[i];
+            y -= Y[i];
+        }
+        vis[x][y] = 0;
+    }
+};
