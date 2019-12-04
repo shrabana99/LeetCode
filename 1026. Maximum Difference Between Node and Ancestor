@@ -1,0 +1,38 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+#define pii pair<int, int>
+
+class Solution {
+public:
+    int ans = -1; 
+    int maxAncestorDiff(TreeNode* root) {
+        solve(root);
+        return ans;
+    }
+    pii solve(TreeNode* root){
+        if(root->left == NULL && root->right == NULL)
+            return {root->val, root->val};
+        pii a, b;
+        if(root->left)
+            a = solve(root->left);
+        else a = {100001, -1};
+        if(root->right) 
+            b = solve(root->right);
+        else b = {100001, -1};
+        int x = min(a.first, b.first);
+        int y = max(a.second, b.second);
+        ans = max(ans, max(abs(root->val- x), abs(root->val- y)));
+        cout << ans << endl;
+        x = min(root->val, x);
+        y = max(root->val, y);
+        return {x, y};
+    }
+};
