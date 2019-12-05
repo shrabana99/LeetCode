@@ -1,0 +1,35 @@
+class Solution {
+public:
+
+    int vis[51][51];
+    int X[4] = {0, 0, 1, -1};
+    int Y[4] = {1, -1, 0, 0};
+    
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        int mx = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!vis[i][j] && grid[i][j]){
+                    mx = max(mx, dfs(i, j, n, m, grid));
+                }
+            }
+        }
+        return mx;
+    }
+    
+    int dfs(int x, int y, int n, int m, vector<vector<int>>& grid){
+        vis[x][y] = 1;
+        int k = 1;
+        for(int i = 0; i < 4; i++){
+            int x1 = x + X[i];
+            int y1 = y + Y[i];
+            if(x1 < n && y1 < m && x1 >= 0 && y1 >= 0 && 
+              !vis[x1][y1] && grid[x1][y1]){
+                k += dfs(x1, y1, n, m, grid);
+            }
+        }
+        return k;
+    }
+};
