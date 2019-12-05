@@ -1,0 +1,43 @@
+
+    
+class Solution {
+    int disc[100005];  // discovery time of a node
+    int low[100005];  // lowest disc time in which any  node in the subtree could have been dicovered
+    int vis[100005]; // visited or not
+    int tim; 
+public:
+    vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
+        vector<int> vec[n];
+        vector<vector<int>> ans;
+        // create the graph
+        for(int i = 0; i < connections.size(); i++){
+            int x = connections[i][0];
+            int y = connections[i][1];
+            vec[x].push_back(y);
+            vec[y].push_back(x);
+        }
+        // search for bridges
+        // do a dfs
+        dfs(ans, vec, 0, -1, n);
+        return ans;
+    }
+    void dfs(vector<vector<int>>& ans, vector<int> vec[],int u, int p, int n){
+        vis[u] = 1;
+        disc[u] = low[u] = ++tim; // at first both dicovery and lowest time are same
+        for(int i = 0; i < vec[u].size(); i++){
+            int v = vec[u][i];
+            if(v == p ) continue;
+            if(!vis[v]){
+                dfs(ans, vec, v, u, n);
+                low[u] = min(low[u], low[v]);
+                if(low[v] > disc[u]){
+                    vector<int>a {u, v};
+                    ans.push_back(a);
+                }
+            }
+            else{
+                low[u] = min(low[u], disc[v]);
+            }
+        }
+    }
+};
