@@ -1,0 +1,22 @@
+class Solution {
+public:
+    bool queryString(string S, int n) {
+        
+        for(int i = 1; i <= n; i++){
+            if(S.find(make_str(i)) == string::npos){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    string make_str(int n){
+        string s;
+        while(n){
+            s += (n%2 + '0');
+            n /= 2;
+        }
+        reverse(s.begin(), s.end());
+        return s;
+    }
+};
