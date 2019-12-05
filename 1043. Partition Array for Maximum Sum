@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maxSumAfterPartitioning(vector<int>& A, int k) {
+        vector<int> dp(A.size()+1);
+        //dp[1] = A[0];
+        for(int i = 1; i <= A.size(); i++){
+            int mm = 0;
+            for(int j = 0; j < k; j++){
+                if(i - j > 0){
+                    mm = max(mm, A[i-j-1]);
+                    dp[i] = max(dp[i], dp[i-j-1] + mm*(j+1));
+                }
+            }
+            
+        }
+        return dp[A.size()];
+    }
+    
+};
