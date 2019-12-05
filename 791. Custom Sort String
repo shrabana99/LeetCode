@@ -1,0 +1,26 @@
+class Solution {
+public:
+    string customSortString(string S, string T) {
+        map<char, int> mp;
+        for(int i = 0;i < S.length(); i++){
+            mp[S[i]] = i+1;
+        }
+        string s1, s2;
+        vector<int> vec(26);;
+        for(int i = 0;i < T.length(); i++){
+            if(mp[T[i]] == 0)
+                s2 += T[i];
+            else{
+                vec[T[i]- 'a']++;
+            }
+        }
+        for(int i = 0;i < S.length(); i++){
+            while(vec[S[i] - 'a'] != 0){
+                s1 += S[i];
+                vec[S[i] - 'a']--;
+            }
+        }
+        cout << s1 << " " << s2;
+        return s1+s2;
+    }
+};
