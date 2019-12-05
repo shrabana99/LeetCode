@@ -1,0 +1,11 @@
+class Solution {
+public:
+    vector<int> circularPermutation(int n, int start) {
+        vector<int> vec(pow(2, n));
+        vec[0] = 0 ^ start;
+        for(int i = 1; i < vec.size(); i++){
+            vec[i] = i ^ (i>>1) ^ start;
+        }
+        return vec;
+    }
+};
