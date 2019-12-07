@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int numSubmatrixSumTarget(vector<vector<int>>& matrix, int target) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+        int ans = 0, cur;
+        unordered_map<int, int> dp;
+        int tmp[m];
+        
+        for(int r1 = 0; r1 < n; r1++){
+            memset(tmp, 0, sizeof(tmp));
+            for(int r2 = r1; r2 < n; r2++){
+                dp.clear();
+                dp[0] = 1; 
+                cur = 0;
+                for(int c = 0; c < m; c++){
+                    tmp[c] += matrix[r2][c];
+                    cur += tmp[c];
+                    if(dp[cur-target] != 0){
+                        ans += dp[cur-target];
+                    }
+                    dp[cur]++;
+                }
+            }
+        }
+        return ans;
+    }
+};
