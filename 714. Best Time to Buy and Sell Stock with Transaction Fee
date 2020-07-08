@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int maxProfit(vector<int>& prices, int fee) {
+        int ans = 0, n = prices.size();
+        if(n < 2) return ans;
+        int minp = prices[0];
+        for(int i = 1; i < n; i++){
+            if(prices[i] < minp){
+                minp = prices[i];
+            }
+            else if(prices[i] > minp + fee){
+                ans += prices[i] - (minp + fee);
+                minp = prices[i]-fee;
+            }
+        }
+        return ans;
+    }
+    
+    int maxProfitDynamic(vector<int>& prices, int fee) {
+        int n = prices.size();
+        int buy = -prices[0], sell = 0;
+        for(int i = 1; i < n; i++){
+            // either buy or sell stays same
+            // or
+            // sells on ith day after buying with fee
+            sell = max(sell, buy + prices[i] - fee);
+            //buys on ith day after selling
+            buy = max(buy, sell - prices[i]);
+        }
+        return sell;
+    }
+};
