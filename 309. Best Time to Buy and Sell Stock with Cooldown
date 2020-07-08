@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        if(n == 0) return 0;
+        vector<int> buy(n), sell(n), cool(n);
+        
+        buy[0] = -prices[0]; // buys stock on 1st day
+        cool[0] = 0; // does not buy anything
+        sell[0] = INT_MIN; // nothing to sell. 
+        
+        for(int i = 1; i < n; i++){ 
+            // either does nothing, so same as (i-1)th day
+            buy[i] = buy[i-1];
+            sell[i] = sell[i-1];
+            cool[i] = cool[i-1];
+            
+            //or 
+            //can buys on ith day if cooldown at i-1th day, 
+            buy[i] = max(buy[i], cool[i-1] - prices[i]);
+            //cooldown if previous day was a sell
+            cool[i] = max(cool[i], sell[i-1]);
+            // sell if previous day was a buy
+            //A buy following a cooldown is already covered in "does nothing" portion 
+            sell[i] = max(sell[i], buy[i-1] + prices[i]);
+        }
+        return max({buy[n-1], sell[n-1], cool[n-1]});
+    }
+    
+};
