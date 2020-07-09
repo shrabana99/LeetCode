@@ -1,0 +1,48 @@
+class Solution {
+    vector<vector<int>> grid;
+    int n = 0, m = 0, valid = 0;
+    const int lx[4] = {1, -1, 0, 0};
+    const int ly[4] = {0, 0, 1, -1};
+    int sx = 0, sy = 0, ex = 0, ey = 0;
+    
+public:
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        // assign
+        this->grid = grid;
+        n = grid.size();
+        m = grid[0].size();
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(grid[i][j] != -1) valid++;
+                if(grid[i][j] == 1) sx = i, sy = j;
+                if(grid[i][j] == 2) ex = i, ey = j;
+            }
+        } //cout << valid << " ";
+        vector<vector<vector<int>>>
+            dp(n, vector<vector<int>> (m, vector<int> (1<<(n*m), -1 ) ) );
+        return dfs(dp, sx, sy, (0|code(sx, sy)));
+    }
+    
+    int dfs(vector<vector<vector<int>>> &dp, int x, int y, int mask){
+        int res = dp[x][y][mask];
+        if(res != -1) return res;
+        if(x == ex && y == ey){ // if all the valid cells are covered
+            return ( __builtin_popcount(mask) == valid ? 1 : 0);
+        }
+        res = 0;
+        for(int i = 0; i < 4; i++){
+            int nx = x + lx[i];
+            int ny = y + ly[i];
+            if(nx >=  0 && ny >= 0 && nx < n && ny < m && grid[nx][ny] != -1){ 
+                if((mask & code(nx, ny) ) == 0){
+                    res += dfs(dp, nx, ny, (mask | code(nx, ny)));
+                }
+            }
+        }
+        return res;
+    }
+    
+    int code(int a, int b){
+        return (1 << (a*m + b)); 
+    }
+};
