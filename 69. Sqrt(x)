@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int mySqrt(int x) {
+        long l = 1, r = x, mx = 0;
+        while(l <= r){
+            long md = (l+r)/2;
+            if(md * md <= x){
+                mx = max(mx, md);
+                l = md + 1;
+            }
+            else r = md - 1;
+        }
+        return mx;
+    }
+};
