@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        int c2 = 0, c5 = 0, x = n;
+        while(n){
+            c2 += n/2;
+            n /= 2;
+        }
+        while(x){
+            c5 += x/5;
+            x /= 5;
+        }
+        return min(c2, c5);
+    }
+};
