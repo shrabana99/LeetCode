@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int superPow(int a, vector<int>& b) {
+        long r = 1;
+        const int MOD = 1337;
+        while(!b.empty()){
+            long last = b.back();
+            b.pop_back();
+            for(int i = 0; i < last; i++){
+                r = (r*a)%MOD;
+            }
+            long rest = superPow(a, b);
+            for(int i = 0; i < 10; i++){
+                r = (r * rest)%MOD;
+            }
+        }
+        return r;
+    }
+
+};
