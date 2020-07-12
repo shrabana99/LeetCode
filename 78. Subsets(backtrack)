@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> ans;
+        sort(nums.begin(), nums.end());
+        vector<int> tmp; // empty vector
+        backtrack(ans, nums, tmp, 0);
+        return ans;
+    }
+    
+private:
+    void backtrack(vector<vector<int>> &ans, vector<int> &nums, vector<int> &tmp, int p){
+        if(p > nums.size()) return;
+        ans.push_back(tmp);
+        for(int i = p; i < nums.size(); i++){
+            tmp.push_back(nums[i]);
+            backtrack(ans, nums, tmp, i+1);
+            tmp.pop_back();
+        }
+    }
+};
