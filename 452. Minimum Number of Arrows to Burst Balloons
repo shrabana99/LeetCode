@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        if(points.size() == 0) return 0;
+        sort(points.begin(), points.end());
+        int ans = 1, last = points[0][1];
+        for(int i = 1; i < points.size(); i++){
+            if(last > points[i][1] ) 
+                last = points[i][1]; // minimum r in the range
+            else if(last < points[i][0]) {
+                last = points[i][1];
+                    ans++;
+            }
+        }
+        return ans;
+    }
+};
+
+// cases like  (1, 2) , (1, 4), (3, 4)
+//if we take max r answer will be 1
+//but for min r last will  be 2, answer will be 2
