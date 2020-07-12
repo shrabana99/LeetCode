@@ -1,0 +1,60 @@
+class Solution {
+    typedef vector<int> vec;
+    typedef vector<vec> vecc;
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        vector<vec> row(9, vec(9, 0)), col(9, vec(9, 0)),
+        box(9, vec(9, 0));
+        for(int i = 0; i < 9; i++){
+            for(int j = 0 ;j < 9; j++){
+                if(board[i][j] != '.'){
+                    int num = board[i][j] - '0' - 1;
+                    row[i][num] = 1;
+                    col[j][num] = 1;
+                    box[i/3*3 + j/3][num] = 1;
+                }
+            }
+        }
+        solve(board, row, col, box, 0, 0);
+    }
+private:
+    bool solve(vector<vector<char>> &board, 
+    vecc &row, vecc &col, vecc &box, int r, int c){
+        
+        if(r == 9){ // solved sudoku
+            return true;
+        } 
+        bool flag = false;
+        if(c == 9){ // this row is finished, move to next row 
+            flag = solve(board, row, col, box, r+1, 0);
+        }
+        else{ // row not finished
+            if(board[r][c] != '.'){ // already marked, move to next col
+                flag = solve(board, row, col, box, r, c+1);
+            }
+            else{ // try plugging all the numbers from (0 to 8) + 1
+                for(int num = 0; num < 9; num++){
+                    if(!row[r][num] && !col[c][num] && 
+                      !box[r/3*3 + c/3][num]) {
+
+                        row[r][num] = 1;
+                        col[c][num] = 1;
+                        box[r/3*3 + c/3][num] = 1;
+                        board[r][c] = num + 1 + '0';
+
+                        flag = solve(board, row, col, box, r, c+1);
+                        // if solve sudoku is found we do not change the numbers
+                        if(flag) break; 
+
+                        // changed back to empty cell
+                        row[r][num] = 0;
+                        col[c][num] = 0;
+                        box[r/3*3 + c/3][num] = 0;
+                        board[r][c] = '.';
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+};
