@@ -1,0 +1,26 @@
+class Solution {
+    typedef vector<int> vec;
+public:
+    vector<vector<int>> combinationSum2(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        vector<vec> ans;
+        vec tmp;
+        solve(ans, nums, tmp, target, 0);
+        return ans;
+    }
+    
+private:
+    void solve(vector<vec> &ans, vec &nums, vec &tmp, int target, int p){
+        if(target == 0) {
+            ans.push_back(tmp);
+            return;
+        }
+        for(int i = p; i < nums.size(); i++){
+            if(target < nums[i]) continue; // if the sum is more than target
+            if(i > p && nums[i] == nums[i-1]) continue; // duplicates
+            tmp.push_back(nums[i]);
+            solve(ans, nums, tmp, target - nums[i], i+1);// can't take same element twice
+            tmp.pop_back();
+        }
+    }
+};
