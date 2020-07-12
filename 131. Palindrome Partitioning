@@ -1,0 +1,33 @@
+class Solution {
+    typedef vector<string> vec;
+public:
+    vector<vector<string>> partition(string s) {
+        vector<vec> ans;
+        vec tmp;
+        solve(ans, tmp, s, 0);
+        return ans;
+    }
+private:
+    void solve(vector<vec> &ans, vec & tmp, string &s, int p){
+        int n = s.size(); 
+        if(p == n){
+            ans.push_back(tmp);
+            return;
+        }
+        for(int i = p; i < n; i++){
+            if(check(s, p, i)){ // check if its palindrome
+                tmp.push_back(s.substr(p, i - p + 1));
+                solve(ans, tmp, s, i+1);
+                tmp.pop_back();
+            }
+        }
+    }
+    
+    bool check(string &a, int l, int r){
+        for(int i = l, j = r; i < a.size(); i++, j--){
+            if(i > j) break;
+            if(a[i] != a[j]) return false;
+        }
+        return true;
+    }
+};
