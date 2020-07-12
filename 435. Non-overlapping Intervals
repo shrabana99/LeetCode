@@ -1,0 +1,22 @@
+// similar to maximum number of non intersecting intervals
+// we will keep them and erase the rest
+
+class Solution {
+public:
+    int eraseOverlapIntervals(vector<vector<int>>& in) {
+        sort(in.begin(), in.end());
+        if(in.size() == 0) return 0;
+        int cnt = 1, last = in[0][1];
+        for(int i = 1; i < in.size(); i++){
+            if(in[i][0] >= last){
+                cnt++;
+                last = in[i][1];
+            }
+            else{ // min because we will keep intervals as left as possible
+                // to accomodate more intervals at right
+                last = min(last, in[i][1]);
+            }
+        }
+        return in.size() - cnt;
+    }
+};
