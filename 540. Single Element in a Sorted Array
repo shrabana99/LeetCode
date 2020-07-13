@@ -1,0 +1,32 @@
+// [1,1,                2,          3,3,4,4,8,8]
+//  0 1                 2           3 4 5 6 
+// even starting                    odd starting
+
+// the single element changes the parity of the starting of the duplicate numbers
+
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        int l = 0, r = nums.size()-1, ans = 0;
+        while(l <= r){ 
+            if(l == r) { 
+                ans = nums[l];
+                break;
+            }
+            int md = (l+r)/2;
+            if(md % 2 == 0){ // md is even 
+                if(nums[md] == nums[md+1]){ // even starting 
+                    l = md + 1;
+                }
+                else r = md; // odd starting
+            }
+            else{ // md  is  odd
+                if(nums[md] == nums[md-1]){ // even starting 
+                    l = md + 1;
+                }
+                else r = md; // odd starting
+            }
+        }
+        return ans;
+    }
+};
