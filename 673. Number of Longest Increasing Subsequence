@@ -1,0 +1,75 @@
+// cases like 1 2 4 3 5 4
+// dp state will be 1, 2, (4/3), (5/4) , 
+// valid - (1, 2, 4, 5), (1, 2, 3, 5), (1, 2, 3, 4)
+// invalid  - (1, 2, 4, 4) 
+// so storing only minimum one will not work, need to store all the number
+// so when we insert a number, 1st binary search is to insert it in the 'pos' position in dp table 
+// 2nd bs is to take sum of contribution of all number strictly less than that from previous state 
+
+// case - 1 4 3 2 4 3 2
+// states - 1, (4/3/2), (4/3/2) *** notice ending numbers are always decreasing in dp[i][:]
+// valid - (1, 3, 4), (1, 2, 4), (1, 2, 3) 
+// as of decreasing nature in dp[i][:], we can use prefix sum instead of count
+// in second bs, we find the minimum number >= than current number and subtract contribution upto it. 
+// if dp[i][:] is [4 4 4 3 3 2 2] and current number is 4, we take contribution of all - [4 4 4]
+
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        // in pair, we store {ending number, prefix sum of count of LIS possible taking that number}
+        vector<vector<pair<int, int>>> dp(nums.size()+1); 
+        int ans = 0;
+        for(int i = 0; i < nums.size(); i++){
+            // search for position to insert the current number in dp[]
+            int pos = search(dp, ans, nums[i]);  
+            int count = 1;
+            
+            // if previous state exists, take sum of contribution of all number strictly less than nums[i]
+            int pre = pos-1;
+            if(pre >= 0){
+                // to do that we find the minimum number >= than current number
+                int pos2 = search2(dp[pre], nums[i]);
+                // and subtract contribution upto it from the total sum (prefix sum)
+                count = dp[pre].back().second; 
+                count -= (pos2 == 0) ? 0 : dp[pre][pos2 - 1].second;
+            }
+            
+            if(!dp[pos].empty())
+                count += dp[pos].back().second;
+            dp[pos].push_back({nums[i], count});
+            if(pos == ans) ans++;
+        }
+        return dp[ans-1].back().second;
+    }
+    
+private:
+    int search(vector<vector<pair<int, int>>> &dp, int n, int k){ // finds lower bound
+        int l = 0, r = n-1;
+        while(l <= r){
+            int md = l + (r - l) / 2;
+            if(dp[md].back().first < k){
+                l = md+1;
+            }
+            else{
+                r = md-1;
+            }
+        }
+        return l;
+    }
+    
+    int search2(vector<pair<int, int>> &dpRow, int k){ // finds upper bound but in a decreasing sequence
+        // if dp[i][:] is [4 4 4 3 3 2 2] and current number is 4, l returns position of 1st 3
+        int l = 0, r = dpRow.size()-1;
+        while(l <= r){
+            int md = l + (r - l) / 2;
+            if(dpRow[md].first < k){
+                r = md-1;
+            }
+            else{
+                l = md+1;
+            }
+        }
+        return l;
+    }
+};
