@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool increasingTriplet(vector<int>& nums) { // if a < b < c exists
+        // or LIS of length 3 exists
+        //instead of dp we need 2 variables a, b
+        int a = INT_MAX, b = INT_MAX;
+        for (auto n : nums){
+        // instead of lower bound, check where the current n fits in (a < b < __)
+        // and update the same
+            if (n <= a)
+                a = n;
+            else if (n <= b)
+                b = n;
+            else
+                return true;
+        }
+        return false;
+    }
+};
