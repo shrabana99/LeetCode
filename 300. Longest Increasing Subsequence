@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp;
+        if(n == 0) return 0; 
+        dp.push_back(nums[0]);
+        for(int i = 1; i < n; i++){
+            int pos = search(dp, nums[i]); // binary search (logn)
+            if(pos == dp.size()){
+                dp.push_back(nums[i]); 
+            }
+            else dp[pos] = min(dp[pos], nums[i]);
+        }
+        return dp.size(); 
+    }
+private:
+    int search(vector<int> &dp, int k){
+        int l = 0, r = dp.size()-1;
+        while(l <= r){
+            int md = (l+r)/2;
+            if(dp[md] < k){ 
+            // not <= as it wants strictly increasing sequence 
+            // if dp is (1, 2, 3) and k is 2, it should return 1 as position
+            // because we are inplementing lower_bound function.
+                l = md+1;
+            }
+            else r = md-1;
+        }
+        return l;
+    }
+    
+};
