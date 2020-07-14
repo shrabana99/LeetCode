@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int ans = nums[0];
+        int curmax = ans, curmin = ans;
+        for(int i = 1; i < nums.size(); i++){
+            /*
+            // negative numbers alters sign, so swap
+            if(nums[i] < 0){
+                swap(curmax, curmin);
+            }
+            curmax = max(curmax * nums[i], nums[i]);
+            curmin = min(curmin * nums[i], nums[i]);
+            
+            */
+            
+            // if you dont want to swap
+            //curmax is maximum of (current max * num[i])when num[i] is +
+            //  (current min * num[i]) when num[i] is -
+            // or num[i] (start fresh)
+            int tmp1 = curmax, tmp2 = curmin;
+            curmax = max({tmp1 * nums[i], tmp2 * nums[i], nums[i]});
+            curmin = min({tmp1 * nums[i], tmp2 * nums[i], nums[i]});
+            
+            ans = max(ans, curmax);
+        }
+        return ans;
+    }
+};
