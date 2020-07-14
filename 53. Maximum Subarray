@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int n = nums.size();
+        //int ans1 = maxSubArray1(nums, 0, n-1);
+        int ans2 = maxSubArray2(nums, n);
+        return ans2;
+    }
+private:
+// divide and conquer
+// nlong time complexity
+// idea is to return maximum of left half, right half and a portion containing the mid element
+    int maxSubArray1(vector<int>& nums, int l, int r) {
+        if(l > r) return INT_MAX; // invalid range
+        if(l == r) return nums[l]; // single element
+        int md = (l+r)/2;
+        
+        int left = maxSubArray1(nums, l, md); 
+        int right = maxSubArray1(nums, md+1, r);
+        
+        // range containing the mid element 
+        int mid1 = INT_MIN, sum = 0;
+        for(int i = md;  i >= l; i--){ // expanding to left
+            sum += nums[i];
+            mid1 = max(mid1, sum);
+        }
+        int mid2 = INT_MIN; sum = 0;
+        for(int i = md+1; i <= r; i++){ // expanding to right
+            sum += nums[i];
+            mid2 = max(mid2, sum);
+        }
+        return max({left, right, mid1 + mid2});
+    }
+    
+    
+// dynamic programming / kadane's algo
+    int maxSubArray2(vector<int>& nums, int n) {
+        int ans = nums[0], cur = nums[0];
+        for(int i = 1; i < n; i++){
+            cur = max(cur + nums[i], nums[i]);
+            ans = max(ans, cur);
+        }
+        return ans;
+    }
+};
