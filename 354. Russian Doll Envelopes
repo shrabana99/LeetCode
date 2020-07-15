@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int maxEnvelopes(vector<vector<int>>& doll) {
+        if(doll.empty()) return 0;
+        int n = doll.size(), last = 0;
+        sort(doll.begin(), doll.end(), cmp);
+        int dp[n+1];
+        dp[last++] = doll[0][1];
+        for(int i = 1; i < n; i++){
+            int k = doll[i][1];
+            int p = lower_bound(dp, dp+last, k) - dp;
+            if(p == last){
+                dp[last++] = k;
+            }
+            else 
+                dp[p] = min(dp[p], k);
+        }
+        return last;
+    }
+    
+private:
+    struct CMP{
+        bool operator () (const vector<int> &a, const vector<int> &b){
+            if(a[0] == b[0]) return a[1] > b[1];
+            return a[0] < b[0];
+        }
+    }cmp;
+    
+};
