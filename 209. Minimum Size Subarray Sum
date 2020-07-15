@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int minSubArrayLen(int s, vector<int>& nums) {
+        //int ans1 = minSubArrayLen1(s, nums);
+        //return ans1;
+        
+        int ans = nums.size()+1, sum = 0;
+        for(int i = 0, j = 0; i < nums.size(); i++){
+            sum += nums[i];
+            if(sum < s)continue;
+            while(sum >= s){  // slide window of maximum sum = s
+                sum -= nums[j];
+                j++;
+            }
+            ans = min(ans, i - (j-1)+1);
+        }
+        return (ans == nums.size()+1 ? 0 : ans);
+    }
+    
+private:
+    int minSubArrayLen1(int s, vector<int>& nums) {
+        vector<int> prefix(nums.size()+1);
+        int ans = nums.size()+1;
+        for(int i = 0; i < nums.size(); i++){
+            prefix[i+1] = prefix[i] + nums[i];
+            if(prefix[i+1] >= s){
+                int target = prefix[i+1]-s;
+                int l = 0, r = i;
+                while(l <= r){// bs for the highest prefix s.t. prefix[i+1]-that value > s
+                    int md = (l+r)/2;
+                    if(prefix[md] <= target)
+                        l = md+1;
+                    else 
+                        r = md-1;
+                }
+                ans = min(ans, i+1-r);
+            }
+        }
+        return (ans == nums.size()+1 ? 0 : ans);
+    }
+};
