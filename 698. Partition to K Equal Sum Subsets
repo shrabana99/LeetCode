@@ -1,0 +1,43 @@
+class Solution {
+public:
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        int n = nums.size(), sum = 0;
+        
+        // sorting in decreasing order as bigger piece fill partition and saves time in recursion
+        sort(nums.rbegin(), nums.rend());
+        for(auto x: nums) 
+            sum += x;  
+        
+        //each subgroup will have sum/k value, let target = sum/k
+        //if sum not divided by k, n < k or largest piece greater than target, answer not possible
+        if(sum % k != 0 || nums[0] > sum/k || n < k) 
+            return false;
+        vector<bool> vis(n, false); 
+        return check(nums, vis, k, 0, sum/k, 0);
+    }
+private:
+    bool check(vector<int>& nums, vector<bool> &vis, int k, int cursum, int target, int pos){ 
+        // if k = 1, array is its own subset
+        if(k == 1) 
+            return true;
+        
+        //current subgroup has target as sum, problem reduced to find k-1 Partition 
+        if(cursum == target) 
+            return check(nums, vis, k-1, 0, target, 0);
+        
+        bool flag = false;
+        for(int i = pos; i < nums.size(); i++){
+            // if current number is already not used and fits in the subgroup , try
+            if(!vis[i] && nums[i] + cursum <= target){
+                vis[i] = true;
+                flag = check(nums, vis, k, nums[i] + cursum, target, i+1);
+                if(flag) 
+                    break;
+                
+                //if solution not found, backtrack
+                vis[i] = false;
+            }
+        }
+        return flag;
+    }
+};
