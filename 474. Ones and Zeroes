@@ -1,0 +1,36 @@
+class Solution {
+public:
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        // dp[i][j] = maximum number of string we can form with i 0s and j 1s
+        vector<vector<int>> dp(m+1, vector<int> (n+1));
+        for(auto str: strs){
+            int z = 0, o = 0;
+            for(auto x: str){
+                if(x == '0')
+                    z++;
+                else 
+                    o++;
+            }
+            
+            // we have to choice, either make str or ignore it
+            // if we ignore str, leave it as it is
+            // if we make str, we go to dp[i][j] to dp[i+z][j+o] increaing its value by 1
+            
+            for(int i = m-z; i >= 0; i--){
+                for(int j = n-o; j >= 0; j--){
+                    dp[i+z][j+o] = max(dp[i+z][j+o], dp[i][j]+1);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+};
+
+/* NOTE: we will go from bottom right to top left, 
+because if we dont, once a updated cell will forward its value in multiple states
+which will result in making multiple copies of a string 
+
+NOTE2: 3 states is also possible as
+dp[l][i][j] = maximum number of string we can form with i 0s and j 1s upto lth string
+
+*/
