@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int subarraysWithKDistinct(vector<int>& A, int K) {
+        int windowk = 0, ans = 0, pre = 0;
+        unordered_map<int, int> window;
+        for(int i = 0, j = 0; i < A.size(); i++){
+            if(window[A[i]] == 0) windowk++;
+            window[A[i]]++;
+            
+            while(windowk > K){ // window has more than k distict ints
+                window[A[j]]--;  
+                if(window[A[j]] == 0){ // one kind of int has completely removed
+                    windowk--; pre = 0;
+                }
+                j++;
+            }
+            // window size <= K
+            
+            while(window[A[j]] > 1){ // window has duplicates , eg - [1 2 1 2], K = 2  
+                window[A[j++]]--;
+                // maximum possible prefix we can exclude and subarray will be still good
+                // for i = 2, pre = [1]; i = 3, pre = [1 2]
+                pre++;  
+            }
+
+            if(windowk == K) { 
+                ans += (pre+1);}
+        }
+        return ans;
+    }
+};
