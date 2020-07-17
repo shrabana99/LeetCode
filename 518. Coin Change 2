@@ -1,0 +1,13 @@
+class Solution {
+public:
+    int change(int m, vector<int>& coins) {
+        vector<int> dp(m+1, 0);
+        dp[0] = 1;
+        for (int coin : coins) {
+            for (int i = coin; i <= m; i++) {
+                dp[i] += dp[i-coin];
+            }
+        }
+        return dp[m];
+    }
+};
