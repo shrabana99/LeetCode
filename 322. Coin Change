@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int m) {
+        vector<int> dp(m+1, INT_MAX);
+        dp[0] = 0;
+        for(auto x: coins){
+            for(int j = 0; j <= m; j++){
+                if(x > m) 
+                    continue;
+                if(dp[j] != INT_MAX && j+x <= m)
+                    dp[j+x] = min(dp[j+x], dp[j]+1);
+            }
+        }
+        return (dp[m] == INT_MAX ? -1 : dp[m]);
+    }
+};
