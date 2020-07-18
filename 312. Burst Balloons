@@ -1,0 +1,38 @@
+// matrix chain multiplication
+
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        int n = nums.size();
+        // pad 1 in both end
+        nums.insert(nums.begin(), 1);
+        nums.insert(nums.end(), 1);
+        
+        // dp[i][j] : coin collected for all ballons in range (i, j)
+        int dp[n+2][n+2];
+        memset(dp, 0, sizeof(dp));
+
+        for(int left = n; left >= 1; left--){ // starting from the bottom right
+            for(int right = left; right <= n; right++){ // finding the smaller subsets first
+                /*
+                    left------pop----right
+                    let us think this (left---) & (---right) part has already been burst
+                    then we get coins from left--- part = dp[left][pop-1]
+                    and from ---right part = dp[pop+1][right]
+                    after bursting pop , we get = nums[left-1] * nums[pop] * nums[right+1]
+                */
+                for(int pop = left; pop <= right; pop++){
+                    int coin_gained = dp[left][pop-1] + dp[pop+1][right];
+                    coin_gained += nums[left-1] * nums[pop] * nums[right+1];
+                    dp[left][right] = max(dp[left][right], coin_gained);
+                }
+            }
+        }
+        /*for(int i = 0 ; i<= n; i++){
+            for(int j = 0; j <= n; j++)
+                cout << dp[i][j] << " ";
+            cout << endl;
+        }*/
+        return dp[1][n];
+    }
+};
