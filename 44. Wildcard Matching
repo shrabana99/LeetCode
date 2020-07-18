@@ -1,0 +1,33 @@
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+           bool matched[s.size()+1][p.size()+1];
+            memset(matched, false, sizeof(matched));
+            
+            // empty matches with empty 
+            matched[0][0] = true;
+
+            //eg : s = '', p = '*', consider * as empty string and make p(0, j) to p(0, j-1)
+            // matched[0][j] = result of matching empty s to p(0, j-1)
+            for(int j = 0; j < p.size(); j++){
+                if(p[j] == '*' && matched[0][j])
+                    matched[0][j+1] = true;
+            }
+        
+            
+            for(int i = 0; i < s.size(); i++){
+                for(int j = 0; j < p.size(); j++){
+                    // si and pj can be matched by same or '?' character
+                    if(s[i] == p[j] || p[j] == '?'){
+                        matched[i+1][j+1] = matched[i][j];
+                    }
+                    else if(p[j] == '*'){
+                        // either consider * as empty string and make p(0, j) to p(0, j-1)
+                        // or comapre s(0, i-1) to p(0, j), eg s = 'a', p = '*' becomes s = '', p = '*'
+                        matched[i+1][j+1] = matched[i][j+1] || matched[i+1][j];
+                    }
+                }
+            }
+            return matched[s.size()][p.size()];
+    }
+};
