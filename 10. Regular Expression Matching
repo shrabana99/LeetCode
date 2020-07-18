@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        // matched[i+1][j+1] stores result of matching s(0, i) && p(0, j)
+        bool matched[s.size()+1][p.size()+1];
+        memset(matched, false, sizeof(matched));
+        
+        // empty string matches with empty 
+        matched[0][0]  = true;
+        
+        // eg: s = "", p = "c*" , just removing c* will make them matched
+        for(int j = 0; j < p.size(); j++){
+            // comparing s = empty string, && p = removed "c*" ,p(0, j-2)
+            if(p[j] == '*' && matched[0][j-1])
+                matched[0][j+1] = true;
+        }
+        for(int i = 0; i < s.size(); i++){
+            for(int j = 0; j < p.size(); j++){
+                // if i & j th character can be matched, just compare s(0, i-1) & p(0, j-1)
+                if(s[i] == p[j] || p[j] == '.'){ 
+                    matched[i+1][j+1] = matched[i][j];
+                }
+                else if(p[j] == '*'){
+                    // preceding char of * in p should match with s[i]
+                    if(s[i] == p[j-1] || p[j-1] == '.'){ 
+                    matched[i+1][j+1] = matched[i+1][j-1] // ignore "c*"(0 occurance), compare s(0, i) & p(0, j-2)
+                                      || matched[i][j+1]; // ignore s[i](many occurance), compare s(0, i-1) & p(0, j)
+                    }
+                    // if not, just ignore "c*", and compare s(0, i) & p(0, j-2)
+                    else{
+                        matched[i+1][j+1] = matched[i+1][j-1];
+                    }
+                }
+            }
+        }
+        return matched[s.size()][p.size()];
+    }
+};
